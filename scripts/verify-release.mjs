@@ -31,17 +31,27 @@ assert.equal(pkg.publishConfig?.registry?.replace(/\/$/, ''), registry)
 if (args[0] === '--verify-published') {
   assert.equal(args.length, 2, 'usage: --verify-published path/to/package.tgz')
   // npm may accept a first publish before its public registry has finished processing it.
-  const deadline = Date.now() + 5 * 60_000
-  let published
+  const deadline = Date.now() + 10 * 60_000
+  const expectedIntegrity = integrity(await readFile(resolve(project, args[1])))
+  let available = false
   do {
-    published = await readRegistry()
-    if (published || Date.now() >= deadline) break
-    console.log('npm is still processing this version; checking again in 5 seconds')
+    const published = await readRegistry()
+    if (published) {
+      assert.equal(published.dist?.integrity, expectedIntegrity, 'published package differs from the audited tarball')
+      const archive = await fetch(published.dist.tarball, { signal: AbortSignal.timeout(30_000) })
+      if (archive.status !== 404) {
+        assert.ok(archive.ok, `npm tarball returned HTTP ${archive.status}`)
+        assert.equal(integrity(Buffer.from(await archive.arrayBuffer())), expectedIntegrity, 'downloaded npm tarball differs from the audited tarball')
+        available = true
+        break
+      }
+    }
+    if (Date.now() >= deadline) break
+    console.log('npm has not finished making this version available; checking again in 5 seconds')
     await delay(5_000)
   } while (true)
-  assert.ok(published, `npm package ${pkg.name}@${pkg.version} is not published`)
-  assert.equal(published.dist?.integrity, integrity(await readFile(resolve(project, args[1]))), 'published package differs from the audited tarball')
-  console.log(`Verified npm package ${pkg.name}@${pkg.version} against the audited tarball`)
+  assert.ok(available, `npm package ${pkg.name}@${pkg.version} is not yet available to install`)
+  console.log(`Verified npm metadata and downloaded tarball for ${pkg.name}@${pkg.version} against the audited package`)
   process.exit(0)
 }
 

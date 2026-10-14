@@ -47,7 +47,7 @@ npm publish .release/cqaiclub-cqai-club-smart-home-plugin-0.1.1.tgz \
   --access public --provenance --ignore-scripts
 ```
 
-若同版本已由本机发布，流水线仅在 registry 的 SHA512 integrity 与当前审计 tarball 相同的情况下跳过 npm 发布，并继续创建 GitHub Release。若内容不同则失败，必须增加版本号。发布后核对 registry integrity，再将 npm tarball、`market-entry.json`、`package-audit.json` 作为 GitHub Release 附件保存。
+若同版本已由本机发布，流水线仅在 registry 的 SHA512 integrity 与当前审计 tarball 相同的情况下跳过 npm 发布，并继续创建 GitHub Release。若内容不同则失败，必须增加版本号。发布后核对 registry 元数据，并实际下载 npm tarball 比对 SHA512；npm 异步处理造成的 404 最多等待 10 分钟，内容不一致立即失败。验证成功后将 npm tarball、`market-entry.json`、`package-audit.json` 作为 GitHub Release 附件保存。
 
 ## 本机首发
 
