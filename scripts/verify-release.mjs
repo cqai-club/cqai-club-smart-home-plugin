@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { appendFile, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, resolve } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 
 const project = resolve(import.meta.dirname, '..')
 const expectedName = '@cqaiclub/cqai-club-smart-home-plugin'
@@ -29,7 +30,15 @@ assert.equal(pkg.publishConfig?.registry?.replace(/\/$/, ''), registry)
 
 if (args[0] === '--verify-published') {
   assert.equal(args.length, 2, 'usage: --verify-published path/to/package.tgz')
-  const published = await readRegistry()
+  // npm may accept a first publish before its public registry has finished processing it.
+  const deadline = Date.now() + 5 * 60_000
+  let published
+  do {
+    published = await readRegistry()
+    if (published || Date.now() >= deadline) break
+    console.log('npm is still processing this version; checking again in 5 seconds')
+    await delay(5_000)
+  } while (true)
   assert.ok(published, `npm package ${pkg.name}@${pkg.version} is not published`)
   assert.equal(published.dist?.integrity, integrity(await readFile(resolve(project, args[1]))), 'published package differs from the audited tarball')
   console.log(`Verified npm package ${pkg.name}@${pkg.version} against the audited tarball`)
