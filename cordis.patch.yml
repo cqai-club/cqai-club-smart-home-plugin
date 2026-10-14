@@ -1,0 +1,6 @@
+- insert:
+    - id: cqai-club-smart-home
+      name: '@cqaiclub/cqai-club-smart-home-plugin'
+      config:
+        autoStart: true
+        mode: managed

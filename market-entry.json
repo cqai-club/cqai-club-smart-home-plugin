@@ -1,0 +1,12 @@
+{
+  "packageName": "@cqaiclub/cqai-club-smart-home-plugin",
+  "displayName": "CQAI Club 家庭智能",
+  "summary": "在 e宝工坊中自动准备独立的本机 Home Assistant，提供家庭设备完整界面、设备查询与控制、环境诊断和备份恢复。",
+  "categories": ["tools", "smart-home"],
+  "keywords": ["CQAI Club", "家庭智能", "Home Assistant", "智能家居", "设备控制", "本地运行"],
+  "repositoryUrl": "https://github.com/cqai-club/cqai-club-smart-home-plugin",
+  "homepageUrl": "https://github.com/cqai-club/cqai-club-smart-home-plugin",
+  "compatibilityApiVersion": "0.2.0-rc.2",
+  "compatibilityHosts": ["dsh-plugin-desktop-beta"],
+  "description": "# CQAI Club 家庭智能\n\n在 e宝工坊侧栏提供独立的「家庭智能」入口。插件为本机管理独立的 Python 与 Home Assistant Core 环境，展示匹配版本的官方完整界面，并向现有 Agent 提供设备查询、控制与环境诊断工具。\n\n## 功能\n\n- 首次启动自动下载运行环境、创建本地账户并完成 Home Assistant 授权；默认托管模式无需填写地址或复制 Token。\n- 家庭面板展示完整 Home Assistant 界面和运行状态，支持启动、停止与刷新。\n- 环境与备份页面提供诊断、重启、重建独立 Python 环境、本地备份与恢复。\n- 连接设置支持家庭名称、时区、自动启动，以及连接已有 Home Assistant 的外部模式。\n- 控制工具只处理明确指定的实体；门锁解锁、报警解除、未知服务及环境修复需通过 Host 批准流程。\n\n## 安装与兼容\n\n在 e宝工坊的插件管理中输入 `@cqaiclub/cqai-club-smart-home-plugin` 安装，再启用插件并打开「家庭智能」。当前插件版本为 0.1.1，目标为 DSH 0.2.0-rc.2 / e宝工坊 Beta，要求 Node ^22.19.0 或 >=24.0.0，以及对应版本的界面、WebServer 与 Cordis 服务。安装后的兼容性与生效方式以 Host 提示为准。\n\n已验证 macOS arm64 / Node 24。原生 Windows 托管模式暂不支持，Linux 托管模式尚未完成实际验收。首次联网安装需要数分钟；品牌设备的账号、网关、配对码与硬件仍需在 Home Assistant「设置 → 设备与服务」中配置。\n\n## 本地运行边界\n\nHome Assistant、Python、凭据、数据库与日志存放在独立本地数据目录，不打包进 npm 插件。长效授权与账户密码保留在后端，不进入公开状态或模型工具输出。托管界面限本机 loopback 入口；原有 Home Assistant 实例使用外部模式连接。\n\n停止、卸载插件或关闭 Host 会停止插件管理的 Home Assistant 进程；后台自动化需要 Host 与 Home Assistant 持续运行。当前提供 Home Assistant Core，不包含 HA OS、Supervisor、Docker 或 Add-ons 应用商店。原生 Python 部署由本插件维护，不属于 Home Assistant 官方支持的安装方式。\n\n插件原创代码采用 MIT；Home Assistant Core 与官方 frontend 保留各自 Apache-2.0 许可。"
+}

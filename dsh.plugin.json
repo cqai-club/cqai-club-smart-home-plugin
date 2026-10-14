@@ -1,0 +1,4 @@
+{
+  "name": "@cqaiclub/cqai-club-smart-home-plugin", "displayName": "家庭智能", "version": "0.1.1",
+  "description": "自动准备本机 Home Assistant，在 DSH 中展示完整家庭设备界面。"
+}
