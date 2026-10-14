@@ -31,7 +31,7 @@ assert.equal(pkg.publishConfig?.registry?.replace(/\/$/, ''), registry)
 if (args[0] === '--verify-published') {
   assert.equal(args.length, 2, 'usage: --verify-published path/to/package.tgz')
   // npm may accept a first publish before its public registry has finished processing it.
-  const deadline = Date.now() + 10 * 60_000
+  const deadline = Date.now() + 15 * 60_000
   const expectedIntegrity = integrity(await readFile(resolve(project, args[1])))
   let available = false
   do {
